@@ -1,0 +1,401 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --moderate-blue: hsl(238, 40%, 52%);
+  --soft-red: hsl(358, 79%, 66%);
+  --light-grayish-blue: hsl(239, 57%, 85%);
+  --pale-red: hsl(357, 100%, 86%);
+  --dark-blue: hsl(212, 24%, 26%);
+  --grayish-blue: hsl(211, 10%, 45%);
+  --light-gray: hsl(223, 19%, 93%);
+  --very-light-gray: hsl(228, 33%, 97%);
+  --white: hsl(0, 0%, 100%);
+  --black: hsl(0, 0%, 0%);
+  --spacer: 1em;
+  --timer: 300ms;
+}
+html {
+  scroll-behavior: smooth;
+}
+img {
+  display: block;
+  object-fit: contain;
+}
+body {
+  background-color: var(--light-gray);
+  padding: calc(var(--spacer) * 1);
+  font-family: "Rubik", Verdana, Geneva, Tahoma, sans-serif;
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+.image-section {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+.public-discussion {
+  width: 50%;
+  position: absolute;
+  opacity: 0.2;
+}
+.image-1 {
+  inset: 0 auto auto 0;
+  transform: rotate(2deg);
+}
+.image-2 {
+  inset: auto 0 0 auto;
+  transform: rotate(-2deg);
+}
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacer);
+}
+.comment {
+  color: var(--grayish-blue);
+  background-color: white;
+  padding: calc(var(--spacer) * 1);
+  display: grid;
+  grid-template: repeat(3, auto) / repeat(3, auto);
+  grid-template-areas: "user-info user-info user-info"
+                        "comment-text comment-text comment-text"
+                        "vote . reply";
+  border-radius: 5px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacer);
+  margin-bottom: var(--spacer);
+  grid-area: user-info;
+  justify-self: flex-start;
+}
+.user-info > img {
+  width: min(50px, 9%);
+}
+.user-name {
+  font-weight: 500;
+  color: var(--black);
+}
+.comment-text {
+  line-height: 1.5;
+  margin-bottom: calc(var(--spacer) * 0.8);
+  grid-area: comment-text;
+  justify-self: flex-start;
+}
+.vote {
+  grid-area: vote;
+  gap: calc(var(--spacer) * 0.8);
+  background-color: var(--very-light-gray);
+  padding: calc(var(--spacer) * 0.4) calc(var(--spacer) * 0.6);
+  border-radius: 5px;
+  width: max-content;
+}
+.vote-btn path {
+  transition: fill 200ms linear;
+}
+.vote-btn:hover path{
+  fill: var(--moderate-blue);
+}
+.reply {
+  grid-area: reply;
+  gap: calc(var(--spacer) * 0.5);
+}
+.reply, .delete, .edit {
+  transition: opacity 200ms linear;
+}
+.reply:hover, .delete:hover, .edit:hover {
+  opacity: 0.5;
+}
+.vote, .reply {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  color: var(--moderate-blue);
+  font-weight: 400;
+}
+.receiver-name {
+  font-weight: 500;
+  color: var(--moderate-blue);
+}
+.reply-section {
+  border-left: 2px solid hsl(0, 3%, 88%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+}
+.reply-section > .comment {
+  width: 95%;
+}
+.reply-section > .sub-comment {
+  margin-bottom: 0;
+}
+.my-comment-actions {
+  grid-area: reply;
+  display: flex;
+  align-items: center;
+  justify-self: flex-end;
+  gap: calc(var(--spacer) * 1.5);
+}
+.sub-comment ~ .sub-comment {
+  margin-top: var(--spacer);
+}
+.tag {
+  color: var(--white);
+  background-color: var(--moderate-blue);
+  padding: calc(var(--spacer) * 0.2) calc(var(--spacer) * 0.6);
+  border-radius: 3px;
+}
+.delete, .edit {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacer) * 0.5);
+  color: var(--moderate-blue);
+  font-weight: 400;
+}
+.delete {
+  color: var(--soft-red);
+}
+.delete, .edit, .reply, .vote-btn, .vote p {
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+.vote p {
+  cursor: default;
+}
+.new-comment {
+  background-color: var(--white);
+  display: grid;
+  grid-template: repeat(2, auto) / repeat(3, auto);
+  grid-template-areas: "input input input"
+                       "image . send-btn";
+  padding: var(--spacer);
+  border-radius: 8px;
+  width: 100%;
+}
+.new-comment-input {
+  grid-area: input;
+  outline: none;
+  min-height: 120px;
+  border-radius: 8px;
+  border: 1px solid var(--light-gray);
+  padding: var(--spacer) calc(var(--spacer) * 1.5);
+  resize: none;
+  font-size: 1rem;
+  font-family: "Rubik", Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 400;
+  margin-bottom: calc(var(--spacer) * 1.5);
+  transition: border-color 200ms linear;
+}
+.new-comment-input:focus {
+  border-color: var(--dark-blue);
+}
+.new-comment-input::placeholder {
+  font-family: "Rubik", Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+.new-comment > img {
+  grid-area: image;
+  width: min(55%, 50px);
+}
+.send-btn {
+  grid-area: send-btn;
+  background-color: var(--moderate-blue);
+  border: none;
+  outline: none;
+  padding-inline: var(--spacer);
+  color: var(--white);
+  font-family: "Rubik", Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 400;
+  height: 90%;
+  font-size: 1.1rem;
+  border-radius: 6px;
+}
+button:active {
+  transform: scale(97%, 97%);
+}
+aside {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 100vh;
+  transform: scale(0, 0);
+  opacity: 0;
+  transition: transform 150ms linear, opacity 150ms linear;
+}
+aside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: black;
+  opacity: 0.6;
+}
+.modal {
+  width: min(95%, 370px);
+  background-color: var(--white);
+  padding: calc(var(--spacer) * 1.5);
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  border-radius: 8px;
+}
+.modal-header {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.modal-text {
+  color: var(--grayish-blue);
+  line-height: 1.5;
+  margin-block: calc(var(--spacer) * 0.7);
+}
+.modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacer);
+}
+.modal-buttons > button {
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: "Rubik", Verdana, Geneva, Tahoma, sans-serif;
+  padding: calc(var(--spacer) * 0.65) calc(var(--spacer) * 1.1);
+}
+#yes-btn {
+  background-color: var(--soft-red);
+}
+#no-btn {
+  background-color: var(--dark-blue);
+}
+.attribution { 
+  font-size: 11px; 
+  text-align: center; 
+  position: absolute;
+  inset: auto 0 0 0;
+}
+.attribution a { 
+  color: hsl(228, 45%, 44%); 
+}
+@media screen and (min-width: 500px) and (max-width: 725px) {
+  main {
+    width: min(100%, 525px);
+    margin: 0 auto;
+  }
+  .new-comment {
+    grid-template: repeat(2, auto) / 80px 1fr;
+    grid-template-areas: "image input"
+                         ". send-btn";
+    gap: 0;
+  }
+  .send-btn {
+    width: max-content;
+    justify-self: flex-end;
+    padding: calc(var(--spacer) * 0.9) calc(var(--spacer) * 1.8);
+  }
+  .modal-buttons > button {
+    font-size: 1rem;
+  }
+
+}
+@media screen and (min-width: 725px) {
+  main {
+    width: min(60%, 700px);
+    margin: 0 auto;
+  }
+  .vote {
+    flex-direction: column;
+    align-self: flex-start;
+    gap: calc(var(--spacer) * 1.2);
+    padding-block: calc(var(--spacer) * 0.6);
+    margin-right: var(--spacer);
+  }
+  .reply {
+    align-self: baseline;
+    justify-self: flex-end;
+  }
+  .user-info, .comment-text {
+    margin: 0;
+  }
+  .comment {
+    grid-template: repeat(2, auto) / repeat(3, auto);
+    grid-template-areas: "vote user-info reply"
+                          "vote comment-text comment-text";
+    row-gap: var(--spacer);
+    padding-block: calc(var(--spacer) * 1.5);
+  }
+  .my-comment-actions {
+    align-self: center;
+    justify-self: flex-end;
+  }
+  .my-info {
+    gap: calc(var(--spacer) * 0.6);
+    width: max-content;
+  }
+  .my-info > .user-name {
+    margin-left: calc(var(--spacer) * 0.6);
+  }
+  .tag { 
+    margin-right: calc(var(--spacer) * 0.6)
+  }
+  .new-comment {
+    grid-template: 1fr / 80px 1fr auto;
+    grid-template-areas: "image input send-btn";
+    gap: 0;
+  }
+  .send-btn {
+    padding: calc(var(--spacer) * 0.8) calc(var(--spacer) * 1.8);
+    margin-left: var(--spacer);
+    height: max-content;
+  }
+  .new-comment-input {
+    width: 100%;
+  }
+  .modal-buttons > button {
+    font-size: 1.1rem;
+  }
+}
+@media (min-width: 725px) and (max-width: 980px) {
+  main {
+    width: min(70%, 570px);
+  }
+  .my-comment {
+    grid-template: repeat(3, auto) / repeat(3, auto);
+    grid-template-areas: "vote user-info ."
+                         "vote comment-text comment-text"
+                         "reply reply reply";
+  }
+  .my-comment-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0;
+  }
+  .my-info > .user-name {
+    margin-left: calc(var(--spacer) * 1.2);
+  }
+  .tag { 
+    margin-right: calc(var(--spacer) * 1.2)
+  }
+  .new-comment {
+    grid-template: repeat(2, auto) / 80px 1fr;
+    grid-template-areas: "image input"
+                         ". send-btn";
+    gap: 0;
+  }
+  .send-btn {
+    width: max-content;
+    justify-self: flex-end;
+    padding: calc(var(--spacer) * 0.9) calc(var(--spacer) * 1.8);
+  }
+}
